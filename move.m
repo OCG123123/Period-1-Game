@@ -3,8 +3,9 @@ function [Map, HP] = move(initialMap, direction, initialHP)
     HP = initialHP;
 
     %Find character position
-    for i = 1:10
-        for I = 1:10
+    mapSize = size(initialMap);
+    for i = 1:mapSize(1)
+        for I = 1:mapSize(2)
             if strcmp(initialMap{i,I}, 'C') == 1
                 characterX = I;
                 characterY = i;

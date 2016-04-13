@@ -34,7 +34,7 @@ else
     input('Press Enter to continue.','s')
     
     %Print character info, and load up the map
-    [ignore1, ignore2, Map] = xlsread('Levels\Level1.xls');
+    [mapLevel, Map, ignore1] = xlsread('Levels\Level1.xls');
     drawMap(Map, HP)
 end
 
