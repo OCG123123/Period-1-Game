@@ -4,11 +4,14 @@ clc
 close all
 
 %Initial values
-HP = 100;
+characterStats = {100, 1, 0, 10, 70, 'Exo-Suit', 0, 'Laser Sword'};
 continueGame = true;
 firstCycle = false;
+loadingSave = 'n';
+mapLevel = 1;
 
-%Ask if loading save
+%{
+Ask if loading save
 loadingSave = input('Would you like to load a save (Y/N)? ', 's');
 
 %Clear screen & verify input
@@ -20,6 +23,7 @@ else
         loadingSave = lower(input('Would you like to load a save (Y/N)? ', 's'));
     end
 end
+%}
 
 %If yes, ask which save  
 if strcmp(loadingSave,'y')
@@ -33,20 +37,20 @@ else
     fprintf('A long time ago, in a galaxy far, far away. Hitler did nothing wrong.\n')
     input('Press Enter to continue.','s')
     
-    %Print character info, and load up the map
-    [mapLevel, Map, ignore1] = xlsread('Levels\Level1.xls');
-    drawMap(Map, HP)
+    %Print character info
+    [Map] = generateMap();
 end
 
 %Run the game
 while continueGame
-    
-    %Draws starter map unless loading save.
+     
+    %Draws starter map
     clc
-    if firstCycle
-    else
-        drawMap(Map, HP)
-    end
+    %if firstCycle
+    %else
+        drawMap(Map, characterStats)
+    %end
+    
     
     %Ask what player wants to do
     playerAction = input('What do you want to do (? for help)? ','s');
@@ -62,32 +66,40 @@ while continueGame
             fprintf('Down\n')
             fprintf('Left\n')
             fprintf('Right\n')
-            fprintf('Save\n')
+            fprintf('Stats\n')
+            %fprintf('Save\n')
             input('Press Enter to continue.', 's')
 
         %Move up
         case 'up'
-            input('Moving Up...\n')
-            [Map, HP] = move(Map, 'up', HP);
+            input('Moving Up...')
+            [Map, characterStats] = move(Map, 'up', characterStats);
 
         %Move down
         case 'down'
-            input('Moving Down...\n')
-            [Map, HP] = move(Map, 'down', HP);
+            input('Moving Down...')
+            [Map, characterStats] = move(Map, 'down', characterStats);
 
         %Move left
         case 'left'
-            input('Moving Left...\n')
-            [Map, HP] = move(Map, 'left', HP);
+            input('Moving Left...')
+            [Map, characterStats] = move(Map, 'left', characterStats);
 
         %Move right
         case 'right'
-            input('Moving Right...\n')
-            [Map, HP] = move(Map, 'right', HP);
+            input('Moving Right...')
+            [Map, characterStats] = move(Map, 'right', characterStats);
 
-        %Save the game
+        %List player characteristics    
+        case 'stats'
+            fprintf('Level %d:\n\tExperience: %d\n\tHealth Points: %d\n\tAttack Power: %d\n\tBase Accuracy: %d\n\tArmor: %s (%d)\n\tWeapon: %s\n', characterStats{2}, characterStats{3}, characterStats{1}, characterStats{4}, characterStats{5}, characterStats{6}, characterStats{7}, characterStats{8})
+            input('Press Enter to continue.')
+
+        %{
+        Save the game
         case 'save'
-            input('Saving...\n')
+            input('Saving...')
+        %}
 
         %They cannot of into spell
         otherwise
