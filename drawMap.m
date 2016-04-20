@@ -1,7 +1,7 @@
-function drawMap(Map,HP)
+function drawMap(Map, characterStats)
     %Print character info, and load up the map
     clc
-    fprintf('HP: %0.0d\n', HP)
+    fprintf('Level %d:\n\t%d experience\n\t%d health\n\n', characterStats{2}, characterStats{3}, characterStats{1})
     mapSize = size(Map);
     for i = 1:mapSize(1)
         for I = 1:mapSize(2)
