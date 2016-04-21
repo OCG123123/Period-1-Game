@@ -4,7 +4,7 @@ clc
 close all
 
 %Initial values
-characterStats = {100, 1, 0, 6, 70, 'Exo-Suit', 0, 'Laser Sword', 0};
+characterStats = {100, 1, 0, 6, 60, 'Exo-Suit', 0, 'Laser Sword', 0};
 continueGame = true;
 firstCycle = false;
 loadingSave = 'n';
@@ -118,6 +118,17 @@ while continueGame
         fprintf('Rest in pieces.\n')
         continueGame = false;
         input('Press Enter to continue.\n')
+    end
+    
+    %Test for level up
+    if characterStats{3} >= 100 * characterStats{2}
+        
+        %Get new character stats
+        characterStats{3} = characterStats{3} - (100 * characterStats{2});
+        characterStats{2} = characterStats{2} + 1;
+        characterStats{1} = characterStats{1} + 20;
+        characterStats{4} = characterStats{4} + 2;
+        characterStats{5} = characterStats{5} + 5;
     end
         
 end
