@@ -4,11 +4,17 @@ clc
 close all
 
 %Initial values
-HP = 100;
+characterStats = {100, 1, 0, 6, 70, 'Exo-Suit', 0, 'Laser Sword', 0};
 continueGame = true;
 firstCycle = false;
+loadingSave = 'n';
+mapLevel = 1;
+[~, ~, enemyData] = xlsread('Enemies.xls');
+[~, ~, armorTypes] = xlsread('Armor.xls');
+[~, ~, weaponTypes] = xlsread('Weapons.xls');
 
-%Ask if loading save
+%{
+Ask if loading save
 loadingSave = input('Would you like to load a save (Y/N)? ', 's');
 
 %Clear screen & verify input
@@ -20,6 +26,7 @@ else
         loadingSave = lower(input('Would you like to load a save (Y/N)? ', 's'));
     end
 end
+%}
 
 %If yes, ask which save  
 if strcmp(loadingSave,'y')
@@ -33,20 +40,21 @@ else
     fprintf('A long time ago, in a galaxy far, far away. Hitler did nothing wrong.\n')
     input('Press Enter to continue.','s')
     
-    %Print character info, and load up the map
-    [mapLevel, Map, ignore1] = xlsread('Levels\Level1.xls');
-    drawMap(Map, HP)
+    %Print character info
+    [Map] = generateMap();
 end
 
 %Run the game
 while continueGame
-    
-    %Draws starter map unless loading save.
+     
+    %Draws starter map
     clc
-    if firstCycle
-    else
-        drawMap(Map, HP)
-    end
+    %if firstCycle
+    %else
+        drawMap(Map, characterStats)
+        fprintf('Floor %d\n\n', mapLevel)
+    %end
+    
     
     %Ask what player wants to do
     playerAction = input('What do you want to do (? for help)? ','s');
@@ -62,35 +70,54 @@ while continueGame
             fprintf('Down\n')
             fprintf('Left\n')
             fprintf('Right\n')
-            fprintf('Save\n')
+            fprintf('Stats\n')
+            %fprintf('Save\n')
             input('Press Enter to continue.', 's')
 
         %Move up
         case 'up'
-            input('Moving Up...\n')
-            [Map, HP] = move(Map, 'up', HP);
+            input('Moving Up...')
+            [Map, characterStats, mapLevel] = move(Map, 'up', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
 
         %Move down
         case 'down'
-            input('Moving Down...\n')
-            [Map, HP] = move(Map, 'down', HP);
+            input('Moving Down...')
+            [Map, characterStats, mapLevel] = move(Map, 'down', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
 
         %Move left
         case 'left'
-            input('Moving Left...\n')
-            [Map, HP] = move(Map, 'left', HP);
+            input('Moving Left...')
+            [Map, characterStats, mapLevel] = move(Map, 'left', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
 
         %Move right
         case 'right'
-            input('Moving Right...\n')
-            [Map, HP] = move(Map, 'right', HP);
+            input('Moving Right...')
+            [Map, characterStats, mapLevel] = move(Map, 'right', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
 
-        %Save the game
+        %List player characteristics    
+        case 'stats'
+            fprintf('Level %d:\n\tExperience: %d\n\tHealth Points: %d\n\tAttack Power: %d\n\tBase Accuracy: %d\n\tArmor: %s (%d)\n\tWeapon: %s (+%d)\n', characterStats{2}, characterStats{3}, characterStats{1}, characterStats{4} + characterStats{9}, characterStats{5}, characterStats{6}, characterStats{7}, characterStats{8}, characterStats{9})
+            input('Press Enter to continue.')
+
+        %{
+        Save the game
         case 'save'
-            input('Saving...\n')
+            input('Saving...')
+        %}
 
         %They cannot of into spell
         otherwise
-            fprintf('You''ve borked your language!\n')            
+            fprintf('You''ve borked your language!\n')
+            input('Press Enter to continue.', 's')            
+    end    
+    
+    %Endgame if player hp is low
+    if characterStats{1} < 0
+        clc
+        fprintf('You have died!\n')
+        fprintf('Rest in pieces.\n')
+        continueGame = false;
+        input('Press Enter to continue.\n')
     end
+        
 end
