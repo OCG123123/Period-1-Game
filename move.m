@@ -1,6 +1,7 @@
-function [Map, HP] = move(initialMap, direction, initialHP)
+function [Map, characterStats, newMapLevel] = move(initialMap, direction, initialCharacterStats, mapLevel, enemyData)
 
-    HP = initialHP;
+    characterStats = initialCharacterStats;
+    newMapLevel = mapLevel;
 
     %Find character position
     mapSize = size(initialMap);
@@ -30,14 +31,7 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    HP = 100;
-                    initialMap{characterY, characterX} = '%';
-                    initialMap{characterY - 1, characterX} = 'C';
-                    
-                %Enter next level    
-                case 'd'
-                    fprintf('Moving on up, to the east side!\n')
-                    input('Press Enter to continue.', 's')
+                    characterStats{1} = 100;
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY - 1, characterX} = 'C';
                     
@@ -45,9 +39,18 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                 case 'o'
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
+                        input('Press Enter to continue.', 's')
+                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
+                    input('Press Enter to continue.', 's')
+                    initialMap{characterY, characterX} = '%';
+                    initialMap{characterY - 1, characterX} = 'C';
+                    
+                %Open treasure chests    
+                case 't'
+                    fprintf('You''ve found some dank loot!\n')
                     input('Press Enter to continue.', 's')
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY - 1, characterX} = 'C';
@@ -74,14 +77,7 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    HP = 100;
-                    initialMap{characterY, characterX} = '%';
-                    initialMap{characterY + 1, characterX} = 'C';
-                    
-                %Enter next level    
-                case 'd'
-                    fprintf('Moving on up, to the east side!\n')
-                    input('Press Enter to continue.', 's')
+                    characterStats{1} = 100;
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY + 1, characterX} = 'C';
                     
@@ -89,9 +85,18 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                 case 'o'
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
+                        input('Press Enter to continue.', 's')
+                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
+                    input('Press Enter to continue.', 's')
+                    initialMap{characterY, characterX} = '%';
+                    initialMap{characterY + 1, characterX} = 'C';
+                    
+                %Open treasure chests    
+                case 't'
+                    fprintf('You''ve found some dank loot!\n')
                     input('Press Enter to continue.', 's')
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY + 1, characterX} = 'C';
@@ -118,14 +123,7 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    HP = 100;
-                    initialMap{characterY, characterX} = '%';
-                    initialMap{characterY, characterX - 1} = 'C';
-                    
-                %Enter next level    
-                case 'd'
-                    fprintf('Moving on up, to the east side!\n')
-                    input('Press Enter to continue.', 's')
+                    characterStats{1} = 100;
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX - 1} = 'C';
                     
@@ -133,9 +131,18 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                 case 'o'
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
+                        input('Press Enter to continue.', 's')
+                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
+                    input('Press Enter to continue.', 's')
+                    initialMap{characterY, characterX} = '%';
+                    initialMap{characterY, characterX - 1} = 'C';
+                    
+                %Open treasure chests    
+                case 't'
+                    fprintf('You''ve found some dank loot!\n')
                     input('Press Enter to continue.', 's')
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX - 1} = 'C';
@@ -162,7 +169,7 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    HP = 100;
+                    characterStats{1} = 100;
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX + 1} = 'C';
                  
@@ -175,8 +182,8 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                     if strcmpi(changeLevel, 'y') == 1
                         fprintf('Moving on up, to the east side!\n')
                         input('Press Enter to continue.', 's')
-                        initialMap{characterY, characterX} = '%';
-                        initialMap{characterY, characterX + 1} = 'C';
+                        newMapLevel = mapLevel + 1;
+                        initialMap = generateMap();
                     else
                         fprintf('Good choice.\n')
                     end
@@ -185,9 +192,18 @@ function [Map, HP] = move(initialMap, direction, initialHP)
                 case 'o'
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
+                        input('Press Enter to continue.', 's')
+                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
+                    input('Press Enter to continue.', 's')
+                    initialMap{characterY, characterX} = '%';
+                    initialMap{characterY, characterX + 1} = 'C';
+                    
+                %Open treasure chests    
+                case 't'
+                    fprintf('You''ve found some dank loot!\n')
                     input('Press Enter to continue.', 's')
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX + 1} = 'C';
