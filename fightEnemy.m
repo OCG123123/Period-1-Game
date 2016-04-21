@@ -71,7 +71,7 @@ while enemyStats{2} > 0 && characterEnterStats{1} > 0
             if characterEnterStats{5} >= randi(100) / 1.5
                 playerDamage = (characterEnterStats{4} + characterEnterStats{9}) * (2/3);
                 enemyStats{2} = enemyStats{2} -  playerDamage;
-                fprintf('You''ve dealt %d damage to the %s\n\n', playerDamage, enemyStats{1})
+                fprintf('You''ve dealt %0d damage to the %s\n\n', playerDamage, enemyStats{1})
             else
                 fprintf('You missed!\n')
             end
@@ -110,14 +110,16 @@ while enemyStats{2} > 0 && characterEnterStats{1} > 0
         
         characterEnterStats{1} = characterEnterStats{1} - damage;
         fprintf('%s does %d damage to you.\n\n', enemyStats{1}, damage)
+        enemyTurn = 0;
     end
 end
 
 %Print out victory if victory
 if characterEnterStats{1} > 0
     fprintf('You''ve messed the %s up, son!\n', enemyStats{1})
+    fprintf('You''ve gained %d experience.\n', enemyStats{7})
+    characterEnterStats{3} = characterEnterStats{3} + enemyStats{7};
 end
-input('Press Enter to continue.', 's')
 clc
 
 %Assign new character values

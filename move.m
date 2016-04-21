@@ -1,5 +1,7 @@
 function [Map, characterStats, newMapLevel] = move(initialMap, direction, initialCharacterStats, mapLevel, enemyData, weaponList, armorList)
-
+    
+    armorSelected = 0;
+    weaponSelected = 0;
     characterStats = initialCharacterStats;
     newMapLevel = mapLevel;
 
@@ -31,7 +33,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    characterStats{1} = 100;
+                    characterStats{1} = 100 + 20 * (characterStats{2} - 1);
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY - 1, characterX} = 'C';
                     
@@ -40,7 +42,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
-                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
+                        characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
@@ -52,19 +54,69 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                 case 't'
                     
                     %Select armor loot or weapon loot
-                    if randi(2) == 1
+                    if randi(3) > 1 && characterStats{7} ~= 10
                         fprintf('You''ve found some new armor!\n')
                         armors = size(armorList);
                         
                         %Select armors of a better level than what is
                         %already had
+                        validArmors = {};
                         for armorName = 1:armors(1)
-                            if armorList(armorName, 2) > initialCharacterStats{7}
+                            if armorList{armorName, 2} > characterStats{7}
                             validArmors = [validArmors; [armorList(armorName, 1) armorList(armorName, 2)]];
                             end
                         end
-                    else
+                        
+                        %Select armor with diminishing chance of highest
+                        %tier gear
+                        totalArmors = size(validArmors);
+                        for potentialArmor = 1:totalArmors(1)
+                            if randi(2) == 2 && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                                
+                            %If all tests fail, give character best armor.
+                            elseif potentialArmor == totalArmors(1) && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                            end
+                        end
+                                
+                        
+                    elseif characterStats{9} ~= 5
                         fprintf('You''ve found a new weapon!\n')
+                        weapons = size(weaponList);
+                        
+                        %Select weapons of a better level than what is
+                        %already had
+                        validWeapons = {};
+                        for weaponName = 1:weapons(1)
+                            if weaponList{weaponName, 2} > characterStats{9}
+                            validWeapons = [validWeapons; [weaponList(weaponName, 1) weaponList(weaponName, 2)]];
+                            end
+                        end
+                        
+                        %Select weapon with diminishing chance of highest
+                        %tier gear
+                        totalWeapons = size(validWeapons);
+                        for potentialWeapon = 1:totalWeapons(1)
+                            if randi(2) == 2 && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                                
+                            %If all tests fail, give character best weapon.
+                            elseif potentialWeapon == totalWeapons(1) && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                            end
+                        end
+                        
+                    else
+                        fprintf('You''ve already got the best you can get here!\n')
                     end
                     
                     input('Press Enter to continue.', 's')
@@ -93,7 +145,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    characterStats{1} = 100;
+                    characterStats{1} = 100 + 20 * (characterStats{2} - 1);
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY + 1, characterX} = 'C';
                     
@@ -102,7 +154,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
-                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
+                        characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
@@ -112,7 +164,73 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     
                 %Open treasure chests    
                 case 't'
-                    fprintf('You''ve found some dank loot!\n')
+                    
+                    %Select armor loot or weapon loot
+                    if randi(3) > 1 && characterStats{7} ~= 10
+                        fprintf('You''ve found some new armor!\n')
+                        armors = size(armorList);
+                        
+                        %Select armors of a better level than what is
+                        %already had
+                        validArmors = {};
+                        for armorName = 1:armors(1)
+                            if armorList{armorName, 2} > characterStats{7}
+                            validArmors = [validArmors; [armorList(armorName, 1) armorList(armorName, 2)]];
+                            end
+                        end
+                        
+                        %Select armor with diminishing chance of highest
+                        %tier gear
+                        totalArmors = size(validArmors);
+                        for potentialArmor = 1:totalArmors(1)
+                            if randi(2) == 2 && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                                
+                            %If all tests fail, give character best armor.
+                            elseif potentialArmor == totalArmors(1) && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                            end
+                        end
+                                
+                        
+                    elseif characterStats{9} ~= 5
+                        fprintf('You''ve found a new weapon!\n')
+                        weapons = size(weaponList);
+                        
+                        %Select weapons of a better level than what is
+                        %already had
+                        validWeapons = {};
+                        for weaponName = 1:weapons(1)
+                            if weaponList{weaponName, 2} > characterStats{9}
+                            validWeapons = [validWeapons; [weaponList(weaponName, 1) weaponList(weaponName, 2)]];
+                            end
+                        end
+                        
+                        %Select weapon with diminishing chance of highest
+                        %tier gear
+                        totalWeapons = size(validWeapons);
+                        for potentialWeapon = 1:totalWeapons(1)
+                            if randi(2) == 2 && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                                
+                            %If all tests fail, give character best weapon.
+                            elseif potentialWeapon == totalWeapons(1) && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                            end
+                        end
+                        
+                    else
+                        fprintf('You''ve already got the best you can get here!\n')
+                    end
+
                     input('Press Enter to continue.', 's')
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY + 1, characterX} = 'C';
@@ -139,7 +257,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    characterStats{1} = 100;
+                    characterStats{1} = 100 + 20 * (characterStats{2} - 1);
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX - 1} = 'C';
                     
@@ -148,7 +266,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
-                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
+                        characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
@@ -158,7 +276,73 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     
                 %Open treasure chests    
                 case 't'
-                    fprintf('You''ve found some dank loot!\n')
+                    
+                    %Select armor loot or weapon loot
+                    if randi(3) > 1 && characterStats{7} ~= 10
+                        fprintf('You''ve found some new armor!\n')
+                        armors = size(armorList);
+                        
+                        %Select armors of a better level than what is
+                        %already had
+                        validArmors = {};
+                        for armorName = 1:armors(1)
+                            if armorList{armorName, 2} > characterStats{7}
+                            validArmors = [validArmors; [armorList(armorName, 1) armorList(armorName, 2)]];
+                            end
+                        end
+                        
+                        %Select armor with diminishing chance of highest
+                        %tier gear
+                        totalArmors = size(validArmors);
+                        for potentialArmor = 1:totalArmors(1)
+                            if randi(2) == 2 && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                                
+                            %If all tests fail, give character best armor.
+                            elseif potentialArmor == totalArmors(1) && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                            end
+                        end
+                                
+                        
+                    elseif characterStats{9} ~= 5
+                        fprintf('You''ve found a new weapon!\n')
+                        weapons = size(weaponList);
+                        
+                        %Select weapons of a better level than what is
+                        %already had
+                        validWeapons = {};
+                        for weaponName = 1:weapons(1)
+                            if weaponList{weaponName, 2} > characterStats{9}
+                            validWeapons = [validWeapons; [weaponList(weaponName, 1) weaponList(weaponName, 2)]];
+                            end
+                        end
+                        
+                        %Select weapon with diminishing chance of highest
+                        %tier gear
+                        totalWeapons = size(validWeapons);
+                        for potentialWeapon = 1:totalWeapons(1)
+                            if randi(2) == 2 && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                                
+                            %If all tests fail, give character best weapon.
+                            elseif potentialWeapon == totalWeapons(1) && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                            end
+                        end
+                        
+                    else
+                        fprintf('You''ve already got the best you can get here!\n')
+                    end
+                    
                     input('Press Enter to continue.', 's')
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX - 1} = 'C';
@@ -185,7 +369,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     fprintf('You''ve discovered a potion!\n')
                     fprintf('You''ve been healed to full!\n')
                     input('Press Enter to continue.', 's')
-                    characterStats{1} = 100;
+                    characterStats{1} = 100 + 20 * (characterStats{2} - 1);
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX + 1} = 'C';
                  
@@ -209,7 +393,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
-                        characterStats = fightEnemy(initialCharacterStats, mapLevel, enemyData);
+                        characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
                     end
@@ -219,7 +403,73 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     
                 %Open treasure chests    
                 case 't'
-                    fprintf('You''ve found some dank loot!\n')
+                    
+                    %Select armor loot or weapon loot
+                    if randi(3) > 1 && characterStats{7} ~= 10
+                        fprintf('You''ve found some new armor!\n')
+                        armors = size(armorList);
+                        
+                        %Select armors of a better level than what is
+                        %already had
+                        validArmors = {};
+                        for armorName = 1:armors(1)
+                            if armorList{armorName, 2} > characterStats{7}
+                            validArmors = [validArmors; [armorList(armorName, 1) armorList(armorName, 2)]];
+                            end
+                        end
+                        
+                        %Select armor with diminishing chance of highest
+                        %tier gear
+                        totalArmors = size(validArmors);
+                        for potentialArmor = 1:totalArmors(1)
+                            if randi(2) == 2 && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                                
+                            %If all tests fail, give character best armor.
+                            elseif potentialArmor == totalArmors(1) && armorSelected == 0
+                                characterStats{6} = validArmors{potentialArmor, 1};
+                                characterStats{7} = validArmors{potentialArmor, 2};
+                                armorSelected = 1;
+                            end
+                        end
+                                
+                        
+                    elseif characterStats{9} ~= 5
+                        fprintf('You''ve found a new weapon!\n')
+                        weapons = size(weaponList);
+                        
+                        %Select weapons of a better level than what is
+                        %already had
+                        validWeapons = {};
+                        for weaponName = 1:weapons(1)
+                            if weaponList{weaponName, 2} > characterStats{9}
+                                validWeapons = [validWeapons; [weaponList(weaponName, 1) weaponList(weaponName, 2)]]; %#ok<*AGROW>
+                            end
+                        end
+                        
+                        %Select weapon with diminishing chance of highest
+                        %tier gear
+                        totalWeapons = size(validWeapons);
+                        for potentialWeapon = 1:totalWeapons(1)
+                            if randi(2) == 2 && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                                
+                            %If all tests fail, give character best weapon.
+                            elseif potentialWeapon == totalWeapons(1) && weaponSelected == 0
+                                characterStats{8} = validWeapons{potentialWeapon, 1};
+                                characterStats{9} = validWeapons{potentialWeapon, 2};
+                                weaponSelected = 1;
+                            end
+                        end
+                        
+                    else
+                        fprintf('You''ve already got the best you can get here!\n')
+                    end
+                    
                     input('Press Enter to continue.', 's')
                     initialMap{characterY, characterX} = '%';
                     initialMap{characterY, characterX + 1} = 'C';
