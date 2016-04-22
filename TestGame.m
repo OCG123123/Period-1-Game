@@ -9,9 +9,15 @@ continueGame = true;
 firstCycle = false;
 loadingSave = 'n';
 mapLevel = 1;
-[~, ~, enemyData] = xlsread('Enemies.xls');
-[~, ~, armorTypes] = xlsread('Armor.xls');
-[~, ~, weaponTypes] = xlsread('Weapons.xls');
+[~, ~, enemyData] = xlsread('Data/Enemies.xls');
+[~, ~, armorTypes] = xlsread('Data/Armor.xls');
+[~, ~, weaponTypes] = xlsread('Data/Weapons.xls');
+[background1_1, background1_2] = audioread('Music/Quazar - Sanxion - Hybrid Song.mp3');
+[background2_1, background2_2] = audioread('Music/Secretly wishing - Schism Tracker.mp3');
+[background3_1, background3_2] = audioread('Music/Skaven - Future Crew - War in the Middle Earth - remix.mp3');
+background1 = audioplayer(background1_1, background1_2);
+background2 = audioplayer(background2_1, background2_2);
+background3 = audioplayer(background3_1, background3_2);
 
 %{
 Ask if loading save
@@ -37,7 +43,33 @@ if strcmp(loadingSave,'y')
 %If no, print out intro,
 else
     clc
-    fprintf('A long time ago, in a galaxy far, far away. Hitler did nothing wrong.\n')
+    
+    %Play music
+    trackSelection = randi(3);
+    if trackSelection == 1
+        play(background1)
+        currentAudio = background1;
+    elseif trackSelection == 2
+        play(background2)
+        currentAudio = background2;
+    else
+        play(background3)
+        currentAudio = background3;
+    end
+    
+    %Print intro
+    warning('off', 'MATLAB:printf:BadEscapeSequenceInFormat')
+    fprintf('The world has been taken over by Space Communists.\n')
+    fprintf('The freedom fighters are rising up under the leadership of John "The American" Smith,\n')
+    fprintf('who has joined the movement to fight against the space tyrants.\n')
+    fprintf('After years of rebellion, they have discovered the secret location of the Communist Gulag.\n')
+    fprintf('John Smith will now enter the depths of the Gulag to commit...\n')
+    fprintf(' _________     _______  _____            _   _ _____ _____ _____ _____  ______ \n')
+    fprintf('|__   __\\ \\   / /  __ \\|  __ \\     /\\   | \\ | |_   _/ ____|_   _|  __ \\|  ____|\n')
+    fprintf('   | |   \\ \\_/ /| |__) | |__) |   /  \\  |  \\| | | || |      | | | |  | | |__   \n')
+    fprintf('   | |    \\   / |  _  /|  _  /   / /\\ \\ | . ` | | || |      | | | |  | |  __|  \n')
+    fprintf('   | |     | |  | | \\ \\| | \\ \\  / ____ \\| |\\  |_| || |____ _| |_| |__| | |____ \n')
+    fprintf('   |_|     |_|  |_|  \\_\\_|  \\_\\/_/    \\_\\_| \\_|_____\\_____|_____|_____/|______|\n\n')
     input('Press Enter to continue.','s')
     
     %Print character info
@@ -77,22 +109,22 @@ while continueGame
         %Move up
         case 'up'
             input('Moving Up...')
-            [Map, characterStats, mapLevel] = move(Map, 'up', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
+            [Map, characterStats, mapLevel] = move(Map, 'up', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %Move down
         case 'down'
             input('Moving Down...')
-            [Map, characterStats, mapLevel] = move(Map, 'down', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
+            [Map, characterStats, mapLevel] = move(Map, 'down', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %Move left
         case 'left'
             input('Moving Left...')
-            [Map, characterStats, mapLevel] = move(Map, 'left', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
+            [Map, characterStats, mapLevel] = move(Map, 'left', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %Move right
         case 'right'
             input('Moving Right...')
-            [Map, characterStats, mapLevel] = move(Map, 'right', characterStats, mapLevel, enemyData, weaponTypes, armorTypes);
+            [Map, characterStats, mapLevel] = move(Map, 'right', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %List player characteristics    
         case 'stats'
@@ -107,7 +139,7 @@ while continueGame
 
         %They cannot of into spell
         otherwise
-            fprintf('You''ve borked your language!\n')
+            fprintf('Make sure to type your action correctly.\n')
             input('Press Enter to continue.', 's')            
     end    
     
@@ -129,6 +161,21 @@ while continueGame
         characterStats{1} = characterStats{1} + 20;
         characterStats{4} = characterStats{4} + 2;
         characterStats{5} = characterStats{5} + 5;
+    end
+    
+    %Test to see if music has stopped
+    if isplaying(background1) == 0 && isplaying(background2) == 0 && isplaying(background3) == 0
+        trackSelection = randi(3);
+        if trackSelection == 1
+            play(background1)
+            currentAudio = 'background1';
+        elseif trackSelection == 2
+            play(background2)
+            currentAudio = 'background2';
+        else
+            play(background3)
+            currentAudio = 'background3';
+        end
     end
         
 end
