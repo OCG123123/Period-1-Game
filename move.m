@@ -1,4 +1,4 @@
-function [Map, characterStats, newMapLevel] = move(initialMap, direction, initialCharacterStats, mapLevel, enemyData, weaponList, armorList)
+function [Map, characterStats, newMapLevel] = move(initialMap, direction, initialCharacterStats, mapLevel, enemyData, weaponList, armorList, runningAudio)
     
     armorSelected = 0;
     weaponSelected = 0;
@@ -25,7 +25,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                 
                 %Give error for wall
                 case 'x'
-                    fprintf('That''s a wall you potato!\n')
+                    fprintf('That''s a wall!\n')
                     input('Press Enter to continue.', 's')
                     
                 %Heal character to full when reaching potion      
@@ -42,6 +42,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
+                        stop(runningAudio)
                         characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
@@ -137,7 +138,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                 
                 %Give error for wall
                 case 'x'
-                    fprintf('That''s a wall you potato!\n')
+                    fprintf('That''s a wall!\n')
                     input('Press Enter to continue.', 's')
                     
                 %Heal character to full when reaching potion      
@@ -154,6 +155,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
+                        stop(runningAudio)
                         characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
@@ -249,7 +251,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                 
                 %Give error for wall
                 case 'x'
-                    fprintf('That''s a wall you potato!\n')
+                    fprintf('That''s a wall!\n')
                     input('Press Enter to continue.', 's')
                     
                 %Heal character to full when reaching potion      
@@ -266,6 +268,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
+                        stop(runningAudio)
                         characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
@@ -361,7 +364,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                 
                 %Give error for wall
                 case 'x'
-                    fprintf('That''s a wall you potato!\n')
+                    fprintf('That''s a wall!\n')
                     input('Press Enter to continue.', 's')
                     
                 %Heal character to full when reaching potion    
@@ -380,7 +383,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     changeLevel = input('Once you''ve done this you can''t go back! Are you sure? (y/n): ', 's');
                     
                     if strcmpi(changeLevel, 'y') == 1
-                        fprintf('Moving on up, to the east side!\n')
+                        fprintf('You decend deeper into the depths of the .\n')
                         input('Press Enter to continue.', 's')
                         newMapLevel = mapLevel + 1;
                         initialMap = generateMap();
@@ -393,6 +396,7 @@ function [Map, characterStats, newMapLevel] = move(initialMap, direction, initia
                     if 6 > randi(20)
                         fprintf('You''ve encountered an enemy!\n')
                         input('Press Enter to continue.', 's')
+                        stop(runningAudio)
                         characterStats = fightEnemy(characterStats, mapLevel, enemyData);
                     else
                         fprintf('An eerie howl sounds throughout the air.\n')
