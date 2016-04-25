@@ -4,7 +4,7 @@ function  characterEndStats = fightEnemy(characterEnterStats, mapLevel, enemyDat
 clc
 enemyAnalyzed = 0;
 enemyTurn = 0;
-[background1, background2] = audioread('Music/Skaven-Future Crew - The Alchemist.wav');
+[background1, background2] = audioread('Music/Skaven - The Alchemist.mp3');
 [player1, player2] = audioread('Sound Effects/Sword Attack.wav');
 [enemy1, enemy2] = audioread('Sound Effects/Prole Attack.wav');
 combatPlayer = audioplayer(background1, background2);
