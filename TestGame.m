@@ -12,9 +12,9 @@ mapLevel = 1;
 [~, ~, enemyData] = xlsread('Data/Enemies.xls');
 [~, ~, armorTypes] = xlsread('Data/Armor.xls');
 [~, ~, weaponTypes] = xlsread('Data/Weapons.xls');
-[background1_1, background1_2] = audioread('Music/Quazar - Sanxion - Hybrid Song.mp3');
-[background2_1, background2_2] = audioread('Music/Secretly wishing - Schism Tracker.mp3');
-[background3_1, background3_2] = audioread('Music/Skaven - Future Crew - War in the Middle Earth - remix.mp3');
+[background1_1, background1_2] = audioread('Music/Quazar - Hybrid Song.mp3');
+[background2_1, background2_2] = audioread('Music/Secretly Wishing - Schism Tracker.mp3');
+[background3_1, background3_2] = audioread('Music/Skaven - War in the Middle Earth - Remix.mp3');
 background1 = audioplayer(background1_1, background1_2);
 background2 = audioplayer(background2_1, background2_2);
 background3 = audioplayer(background3_1, background3_2);
@@ -163,18 +163,18 @@ while continueGame
         characterStats{5} = characterStats{5} + 5;
     end
     
-    %Test to see if music has stopped
+    %Test to see if music has stopped and if it has, start a new song
     if isplaying(background1) == 0 && isplaying(background2) == 0 && isplaying(background3) == 0
         trackSelection = randi(3);
         if trackSelection == 1
             play(background1)
-            currentAudio = 'background1';
+            currentAudio = background1;
         elseif trackSelection == 2
             play(background2)
-            currentAudio = 'background2';
+            currentAudio = background2;
         else
             play(background3)
-            currentAudio = 'background3';
+            currentAudio = background3;
         end
     end
         
