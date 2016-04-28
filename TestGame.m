@@ -108,22 +108,22 @@ while continueGame
 
         %Move up
         case 'up'
-            input('Moving Up...')
+            input('Moving Up...', 's')
             [Map, characterStats, mapLevel] = move(Map, 'up', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %Move down
         case 'down'
-            input('Moving Down...')
+            input('Moving Down...', 's')
             [Map, characterStats, mapLevel] = move(Map, 'down', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %Move left
         case 'left'
-            input('Moving Left...')
+            input('Moving Left...', 's')
             [Map, characterStats, mapLevel] = move(Map, 'left', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %Move right
         case 'right'
-            input('Moving Right...')
+            input('Moving Right...', 's')
             [Map, characterStats, mapLevel] = move(Map, 'right', characterStats, mapLevel, enemyData, weaponTypes, armorTypes, currentAudio);
 
         %List player characteristics    

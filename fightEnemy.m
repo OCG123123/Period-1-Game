@@ -94,7 +94,6 @@ while enemyStats{2} > 0 && characterEnterStats{1} > 0
             fprintf('\tpower\n')
             fprintf('\taimed\n')
             fprintf('\tanalyze\n')
-            fprintf('\t?\n')
             
         %Do analysis    
         case 'analyze'
