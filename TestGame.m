@@ -19,8 +19,8 @@ background1 = audioplayer(background1_1, background1_2);
 background2 = audioplayer(background2_1, background2_2);
 background3 = audioplayer(background3_1, background3_2);
 
-%{
-Ask if loading save
+
+%Ask if loading save
 loadingSave = input('Would you like to load a save (Y/N)? ', 's');
 
 %Clear screen & verify input
@@ -32,13 +32,35 @@ else
         loadingSave = lower(input('Would you like to load a save (Y/N)? ', 's'));
     end
 end
-%}
+
 
 %If yes, ask which save  
 if strcmp(loadingSave,'y')
     clc
-    disp('Loading Save...')
+    [~, ~, Saves] = xlsread('Saves\Save Directory.xls');
+    
+    %Check for saves
+    emptyDirectoryCheck = isnan(Saves{1});
+    if emptyDirectoryCheck(1) == 1
+        fprintf('There are no saves to load!\n')
+        continueGame = false;
+        
+    %Load Save    
+    else
+    loadSave = input('What save do you want to load? ', 's');
+    
+    %Get correct value
+    while floor(loadSave) ~= loadSave || ischar(loadSave)
+        fprintf('Please input a correct value!\n')
+        loadSave = input('What save do you want to load? ', 's');
+    end
+    
     firstCycle = true;
+    end
+    
+    %Final operation marker
+    input('Press Enter to continue.', 's')
+    clc
     
 %If no, print out intro,
 else
