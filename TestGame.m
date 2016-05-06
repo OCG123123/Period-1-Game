@@ -7,8 +7,8 @@ close all
 characterStats = {100, 1, 0, 6, 60, 'Exo-Suit', 0, 'Laser Sword', 0};
 continueGame = true;
 firstCycle = false;
-loadingSave = 'n';
 mapLevel = 1;
+isValid = false;
 [~, ~, enemyData] = xlsread('Data/Enemies.xls');
 [~, ~, armorTypes] = xlsread('Data/Armor.xls');
 [~, ~, weaponTypes] = xlsread('Data/Weapons.xls');
@@ -49,12 +49,27 @@ if strcmp(loadingSave,'y')
     else
     loadSave = input('What save do you want to load? ', 's');
     
-    %Get correct value
-    while floor(loadSave) ~= loadSave || ischar(loadSave)
+    %Change loadSave to a number and get correct value
+    while ~isValid == 1
+        loadSaveChars = isstrprop(loadSave, 'digit');
+        isValid = true;
+        
+        for i = 1:length(loadSaveChars)
+            if loadSaveChars(i) ~= 1
+                isValid = false;
+            end
+        end
+        
+        if isempty(loadSaveChars)
+            isValid = false;
+        end
+        
+        clc
         fprintf('Please input a correct value!\n')
         loadSave = input('What save do you want to load? ', 's');
     end
     
+    %Tell game a save has been loaded
     firstCycle = true;
     end
     
