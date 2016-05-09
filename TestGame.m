@@ -9,9 +9,9 @@ continueGame = true;
 firstCycle = false;
 mapLevel = 1;
 isValid = false;
-[~, ~, enemyData] = xlsread('Data/Enemies.xls');
-[~, ~, armorTypes] = xlsread('Data/Armor.xls');
-[~, ~, weaponTypes] = xlsread('Data/Weapons.xls');
+[~, ~, enemyData] = xlsread('Data/Enemies.xlsx');
+[~, ~, armorTypes] = xlsread('Data/Armor.xlsx');
+[~, ~, weaponTypes] = xlsread('Data/Weapons.xlsx');
 [background1_1, background1_2] = audioread('Music/Quazar - Hybrid Song.mp3');
 [background2_1, background2_2] = audioread('Music/Secretly Wishing - Schism Tracker.mp3');
 [background3_1, background3_2] = audioread('Music/Skaven - War in the Middle Earth - Remix.mp3');
@@ -37,7 +37,7 @@ end
 %If yes, ask which save  
 if strcmp(loadingSave,'y')
     clc
-    [~, ~, Saves] = xlsread('Saves\Save Directory.xls');
+    [~, ~, Saves] = xlsread('Saves\Save Directory.xlsx');
     
     %Check for saves
     emptyDirectoryCheck = isnan(Saves{1});
@@ -50,7 +50,7 @@ if strcmp(loadingSave,'y')
     loadSave = input('What save do you want to load? ', 's');
     
     %Change loadSave to a number and get correct value
-    while ~isValid == 1
+    while isValid ~= 1
         loadSaveChars = isstrprop(loadSave, 'digit');
         isValid = true;
         
@@ -65,8 +65,11 @@ if strcmp(loadingSave,'y')
         end
         
         clc
-        fprintf('Please input a correct value!\n')
-        loadSave = input('What save do you want to load? ', 's');
+        
+        if isValid ~= 1
+            fprintf('Please input a correct value!\n')
+            loadSave = input('What save do you want to load? ', 's');
+        end
     end
     
     %Tell game a save has been loaded
@@ -76,6 +79,19 @@ if strcmp(loadingSave,'y')
     %Final operation marker
     input('Press Enter to continue.', 's')
     clc
+    
+    %Play music
+    trackSelection = randi(3);
+    if trackSelection == 1
+        play(background1)
+        currentAudio = background1;
+    elseif trackSelection == 2
+        play(background2)
+        currentAudio = background2;
+    else
+        play(background3)
+        currentAudio = background3;
+    end
     
 %If no, print out intro,
 else
