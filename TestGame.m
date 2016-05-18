@@ -9,6 +9,7 @@ continueGame = true;
 firstCycle = false;
 mapLevel = 1;
 isValid = false;
+loadingSave = 'n';
 [~, ~, enemyData] = xlsread('Data/Enemies.xlsx');
 [~, ~, armorTypes] = xlsread('Data/Armor.xlsx');
 [~, ~, weaponTypes] = xlsread('Data/Weapons.xlsx');
@@ -20,7 +21,7 @@ background2 = audioplayer(background2_1, background2_2);
 background3 = audioplayer(background3_1, background3_2);
 
 
-%Ask if loading save
+%{Ask if loading save
 loadingSave = input('Would you like to load a save (Y/N)? ', 's');
 
 %Clear screen & verify input
@@ -32,11 +33,12 @@ else
         loadingSave = lower(input('Would you like to load a save (Y/N)? ', 's'));
     end
 end
-
+%}
 
 %If yes, ask which save  
 if strcmp(loadingSave,'y')
     clc
+    %{
     [~, ~, Saves] = xlsread('Saves\Save Directory.xlsx');
     
     %Check for saves
@@ -92,7 +94,7 @@ if strcmp(loadingSave,'y')
         play(background3)
         currentAudio = background3;
     end
-    
+    %}
 %If no, print out intro,
 else
     clc
